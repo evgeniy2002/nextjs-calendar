@@ -28,7 +28,7 @@ export const Day = ({ day, rowIdx }) => {
         <p className={`text-sm p1 my-1 text-center ${getCurrentDayClass()}`}>{day.format('DD')}</p>
       </header>
       <div
-        className="flex-1 cursor-pointer"
+        className="flex-1 cursor-pointer pl-2"
         onClick={() => {
           setDaySelected(day);
           setShowEventModal(true);
@@ -37,7 +37,8 @@ export const Day = ({ day, rowIdx }) => {
           <div
             key={idx}
             onClick={() => setSelectedEvent(evt)}
-            className={`bg-${evt.label}-200 p-1 mr-3 text-gray-600 text-sm rounded mb-1 truncate`}>
+            style={{ background: evt.label }}
+            className={`p-2  mr-3 text-white text-sm rounded mb-1 truncate`}>
             {evt.title}
           </div>
         ))}
