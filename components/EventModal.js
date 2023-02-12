@@ -5,22 +5,31 @@ import React from 'react';
 const labelsClasses = ['indigo', 'gray', 'green', 'blue', 'red', 'purple'];
 
 export const EventModal = () => {
-  const [title, setTitle] = React.useState('');
-  const [description, setDescription] = React.useState('');
+  const { setShowEventModal, daySelected, dispatch, selectedEvent } =
+    React.useContext(GlobalContext);
+  const [title, setTitle] = React.useState(selectedEvent ? selectedEvent.title : '');
+  const [description, setDescription] = React.useState(
+    selectedEvent ? selectedEvent.description : '',
+  );
 
-  const [selectedLabel, setSelectedLabel] = React.useState(labelsClasses[0]);
-  const { setShowEventModal, daySelected, dispatch } = React.useContext(GlobalContext);
+  const [selectedLabel, setSelectedLabel] = React.useState(
+    selectedEvent ? labelsClasses.find((lbl) => lbl === selectedEvent.label) : labelsClasses[0],
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const calendatEvent = {
-      id: Date.now(),
+      id: selectedEvent ? selectedEvent.id : Date.now(),
       title,
       description,
       label: selectedLabel,
       day: daySelected.valueOf(),
     };
-    dispatch({ type: 'push', payload: calendatEvent });
+    if (selectedEvent) {
+      dispatch({ type: 'update', payload: calendatEvent });
+    } else {
+      dispatch({ type: 'push', payload: calendatEvent });
+    }
     setShowEventModal(false);
   };
   return (
@@ -28,13 +37,28 @@ export const EventModal = () => {
       <form className="bg-white rounded-lg shadow-2xl w-1/4">
         <header className="bg-gray-100 px-4 py-2 flex justify-between items-center">
           <span>
-            <Image src={'images/cross.svg'} width={25} height={25} alt="" />
+            <Image src={'images/menu.svg'} width={15} height={15} alt="" />
           </span>
-          <button onClick={() => setShowEventModal(false)}>
-            <span>
-              <Image src={'images/cross.svg'} width={25} height={25} alt="" />
-            </span>
-          </button>
+          <div className="flex">
+            {selectedEvent && (
+              <span
+                onClick={() => {
+                  dispatch({
+                    type: 'delete',
+                    payload: selectedEvent,
+                  });
+                  setShowEventModal(false);
+                }}
+                className="cursor-pointer">
+                <Image src={'images/trash.svg'} width={20} height={20} alt="" />
+              </span>
+            )}
+            <button onClick={() => setShowEventModal(false)} className="ml-2">
+              <span>
+                <Image src={'images/cross.svg'} width={25} height={25} alt="" />
+              </span>
+            </button>
+          </div>
         </header>
         <div className="p-3">
           <div className="grid grid-cols-1/5 items-end gap-y-7">
