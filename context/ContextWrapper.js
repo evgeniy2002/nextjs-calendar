@@ -8,7 +8,7 @@ function savedEventsReducer(state, { type, payload }) {
     case 'update':
       return state.map((evt) => (evt.id === payload.id ? payload : evt));
     case 'delete':
-      return state.filter((evt) => evt.id !== payload);
+      return state.filter((evt) => evt.id !== payload.id);
     default:
       throw new Error();
   }
@@ -26,6 +26,7 @@ export const ContextWrapper = (props) => {
   const [smallCalendarMonth, setSmallCalendarMonth] = React.useState(null);
   const [daySelected, setDaySelected] = React.useState(dayjs());
   const [showEventModal, setShowEventModal] = React.useState(false);
+  const [selectedEvent, setSelectedEvent] = React.useState(null);
   const [savedEvents, dispatch] = React.useReducer(savedEventsReducer, [], initEvents);
 
   React.useEffect(() => {
@@ -50,6 +51,9 @@ export const ContextWrapper = (props) => {
         showEventModal,
         setShowEventModal,
         dispatch,
+        selectedEvent,
+        setSelectedEvent,
+        savedEvents,
       }}>
       {props.children}
     </GlobalContext.Provider>

@@ -3,7 +3,16 @@ import dayjs from 'dayjs';
 import React from 'react';
 
 export const Day = ({ day, rowIdx }) => {
-  const { setDaySelected, setShowEventModal } = React.useContext(GlobalContext);
+  const [dayEvents, setDayEvents] = React.useState([]);
+  const { setDaySelected, setShowEventModal, savedEvents, setSelectedEvent } =
+    React.useContext(GlobalContext);
+
+  React.useEffect(() => {
+    const events = savedEvents.filter(
+      (evt) => dayjs(evt.day).format('DD-MM-YY') === day.format('DD-MM-YY'),
+    );
+    setDayEvents(events);
+  }, [savedEvents, day]);
 
   const getCurrentDayClass = () => {
     return day.format('DD-MM-YY') === dayjs().format('DD-MM-YY')
@@ -24,7 +33,14 @@ export const Day = ({ day, rowIdx }) => {
           setDaySelected(day);
           setShowEventModal(true);
         }}>
-        {''}
+        {dayEvents.map((evt, idx) => (
+          <div
+            key={idx}
+            onClick={() => setSelectedEvent(evt)}
+            className={`bg-${evt.label}-200 p-1 mr-3 text-gray-600 text-sm rounded mb-1 truncate`}>
+            {evt.title}
+          </div>
+        ))}
       </div>
     </div>
   );
