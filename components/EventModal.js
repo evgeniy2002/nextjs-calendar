@@ -2,7 +2,7 @@ import GlobalContext from '@/context/GlobalContext';
 import Image from 'next/image';
 import React from 'react';
 
-const labelsClasses = ['indigo', 'gray', 'green', 'blue', 'red', 'purple'];
+const labelsClasses = ['#ff4b4bd8', '#e0ac1ed4', '#6999ffd4'];
 
 export const EventModal = () => {
   const { setShowEventModal, daySelected, dispatch, selectedEvent } =
@@ -33,7 +33,7 @@ export const EventModal = () => {
     setShowEventModal(false);
   };
   return (
-    <div className="h-screen w-full fixed left-0 top-0 flex justify-center items-center">
+    <div className="h-screen  w-full fixed left-0 top-0 flex justify-center items-center">
       <form className="bg-white rounded-lg shadow-2xl w-1/4">
         <header className="bg-gray-100 px-4 py-2 flex justify-between items-center">
           <span>
@@ -79,13 +79,13 @@ export const EventModal = () => {
             <span>
               <Image src={'images/calendar.svg'} width={20} height={20} alt="" />
             </span>
-            <input
+            <textarea
               type="text"
               name="description"
               placeholder="Add description"
               value={description}
               required
-              className="pt-3 border-0 text-gray-600 pb-2 w-full border-b-2 border-gray-200 focus:outline-none focus:ring-0 focus:border-blue-500"
+              className="pt-3 border-0 text-gray-600 w-full border-b-2 border-gray-200 focus:outline-none focus:ring-0 focus:border-blue-500"
               onChange={(e) => setDescription(e.target.value)}
             />
             <span>
@@ -95,7 +95,8 @@ export const EventModal = () => {
               {labelsClasses.map((color, i) => (
                 <span
                   key={i}
-                  className={`bg-${color}-500 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer`}
+                  className=" w-6 h-6 rounded-full flex items-center justify-center cursor-pointer"
+                  style={{ background: color }}
                   onClick={() => setSelectedLabel(color)}>
                   {selectedLabel === color && (
                     <span>
