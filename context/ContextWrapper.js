@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React from 'react';
+import React, { useMemo } from 'react';
 import GlobalContext from './GlobalContext';
 function savedEventsReducer(state, { type, payload }) {
   switch (type) {
@@ -27,17 +27,49 @@ export const ContextWrapper = (props) => {
   const [daySelected, setDaySelected] = React.useState(dayjs());
   const [showEventModal, setShowEventModal] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState(null);
+  // const [labels, setLabels] = React.useState([]);
   const [savedEvents, dispatch] = React.useReducer(savedEventsReducer, [], initEvents);
+
+  // const filteredEvents = useMemo(() => {
+  //   return savedEvents.filter((evt) =>
+  //     labels
+  //       .filter((lbl) => lbl.checked)
+  //       .map((lbl) => lbl.label)
+  //       .includes(evt.label),
+  //   );
+  // }, [savedEvents, labels]);
 
   React.useEffect(() => {
     localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
   }, [savedEvents]);
 
   React.useEffect(() => {
+    if (!showEventModal) {
+      setSelectedEvent(null);
+    }
+  }, [showEventModal]);
+
+  // React.useEffect(() => {
+  //   setLabels((prevLabels) => {
+  //     return [...new Set(savedEvents.map((evt) => evt.label))].map((label) => {
+  //       const currentLabel = prevLabels.find((lbl) => lbl.label === label);
+  //       return {
+  //         label,
+  //         checked: currentLabel ? currentLabel.checked : true,
+  //       };
+  //     });
+  //   });
+  // }, [savedEvents]);
+
+  React.useEffect(() => {
     if (smallCalendarMonth !== null) {
       setMonthIndex(smallCalendarMonth);
     }
   }, [smallCalendarMonth]);
+
+  // const updateLabel = (label) => {
+  //   setLabels(labels.map((lbl) => (lbl.label === label.label ? label : lbl)));
+  // };
 
   return (
     <GlobalContext.Provider
@@ -54,6 +86,10 @@ export const ContextWrapper = (props) => {
         selectedEvent,
         setSelectedEvent,
         savedEvents,
+        // setLabels,
+        // labels,
+        // updateLabel,
+        // filteredEvents,
       }}>
       {props.children}
     </GlobalContext.Provider>
