@@ -20,7 +20,7 @@ export const Day = ({ day, rowIdx }) => {
   };
   return (
     <div 
-      className="border h-[270px] overflow-y-scroll flex flex-col cursor-pointer no-scrollbar"
+      className="border  flex flex-col cursor-pointer"
       onClick={() => {
         setDaySelected(day);
         setShowEventModal(true);
@@ -31,17 +31,15 @@ export const Day = ({ day, rowIdx }) => {
         )}
         <p className={`text-sm p-1 my-1 text-center ${getCurrentDayClass()}`}>{day.format('DD')}</p>
       </header>
-      <div
-        className="flex flex-col gap-1 px-2"
-       >
+      <div className="flex flex-col gap-1 px-2 h-[300px] overflow-y-scroll  no-scrollbar">
         {dayEvents.map((evt, idx) => (
           <div
             key={idx}
             onClick={() => setSelectedEvent(evt)}
             style={{ background: evt.label }}
-            className={`relative px-3 pb-2 text-white rounded border border-[#000] last:mb-3 shadow-md`}>
+            className={`relative px-3 pt-1 pb-3 text-white rounded border border-[#000] last:mb-3 shadow-md`}>
               <p className='text-lg font-medium text-line-clamp'>{evt.title}</p>
-              <p className='text-sm pt-1 text-line-clamp-2'>{evt.description}</p>
+              <p className='text-sm mt-2 text-line-clamp-2'>{evt.description}</p>
           </div>
         ))}
       </div>
