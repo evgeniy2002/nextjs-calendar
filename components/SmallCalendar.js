@@ -32,9 +32,9 @@ export const SmallCalendar = () => {
     const currDay = day.format(format);
     const slcDay = daySelected && daySelected.format(format);
     if (nowDay === currDay) {
-      return 'bg-blue-500 rounded-full text-white';
+      return 'bg-red-500 rounded text-white';
     } else if (currDay === slcDay) {
-      return 'bg-blue-100 rounded-full text-black font-bold';
+      return 'bg-gray-200 rounded ';
     } else {
       return '';
     }
@@ -58,7 +58,7 @@ export const SmallCalendar = () => {
           </button>
         </div>
       </header>
-      <div className="grid grid-cols-7 grid-rows-6 tran">
+      <div className="grid grid-cols-7 grid-rows-6">
         {currentMonth[0].map((day, index) => (
           <span key={index} className="text-sm py-1 text-center">
             {day.format('dd')}

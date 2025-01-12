@@ -1,13 +1,12 @@
 import GlobalContext from '@/context/GlobalContext';
 import dayjs from 'dayjs';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 
 export const Day = ({ day, rowIdx }) => {
   const [dayEvents, setDayEvents] = React.useState([]);
-  const { setDaySelected, setShowEventModal, savedEvents, setSelectedEvent } =
-    React.useContext(GlobalContext);
+  const { setDaySelected, setShowEventModal, savedEvents, setSelectedEvent } = useContext(GlobalContext); 
 
-  React.useEffect(() => {
+  useEffect(() => {
     const events = savedEvents.filter(
       (evt) => dayjs(evt.day).format('DD-MM-YY') === day.format('DD-MM-YY'),
     );
@@ -16,30 +15,33 @@ export const Day = ({ day, rowIdx }) => {
 
   const getCurrentDayClass = () => {
     return day.format('DD-MM-YY') === dayjs().format('DD-MM-YY')
-      ? 'bg-blue-600 text-white rounded-full w-7 py-1'
+      ? 'bg-red-500 text-white rounded w-7 py-1'
       : '';
   };
   return (
-    <div className="border border-gray-200 flex flex-col">
+    <div 
+      className="border h-[270px] overflow-y-scroll flex flex-col cursor-pointer no-scrollbar"
+      onClick={() => {
+        setDaySelected(day);
+        setShowEventModal(true);
+      }}>
       <header className="flex flex-col items-center">
         {rowIdx === 0 && (
           <p className="text-sm mt-1 font-medium">{day.format('ddd').toUpperCase()}</p>
         )}
-        <p className={`text-sm p1 my-1 text-center ${getCurrentDayClass()}`}>{day.format('DD')}</p>
+        <p className={`text-sm p-1 my-1 text-center ${getCurrentDayClass()}`}>{day.format('DD')}</p>
       </header>
       <div
-        className="flex-1 cursor-pointer pl-2"
-        onClick={() => {
-          setDaySelected(day);
-          setShowEventModal(true);
-        }}>
+        className="flex flex-col gap-1 px-2"
+       >
         {dayEvents.map((evt, idx) => (
           <div
             key={idx}
             onClick={() => setSelectedEvent(evt)}
             style={{ background: evt.label }}
-            className={`p-2  mr-3 text-white text-sm rounded mb-1 truncate`}>
-            {evt.title}
+            className={`relative px-3 pb-2 text-white rounded border border-[#000] last:mb-3 shadow-md`}>
+              <p className='text-lg font-medium text-line-clamp'>{evt.title}</p>
+              <p className='text-sm pt-1 text-line-clamp-2'>{evt.description}</p>
           </div>
         ))}
       </div>

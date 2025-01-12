@@ -1,65 +1,67 @@
 import GlobalContext from '@/context/GlobalContext';
 import Image from 'next/image';
-import React from 'react';
+import React, { useContext, useState } from 'react';
 
-const labelsClasses = ['#9BA1B6', '#F7455B', '#efaa1c', '#2b68ead4'];
+export const ResultOfYearModal = ({ onClose }) => {
 
-export const EventModal = () => {
-  const { setShowEventModal, daySelected, dispatch, selectedEvent } =
-    React.useContext(GlobalContext);
-  const [title, setTitle] = React.useState(selectedEvent ? selectedEvent.title : '');
-  const [description, setDescription] = React.useState(
-    selectedEvent ? selectedEvent.description : '',
-  );
+  const [result, setResult] = useState(() => {
+    const resultYear = localStorage.getItem('result')
 
-  const [selectedLabel, setSelectedLabel] = React.useState(
-    selectedEvent ? labelsClasses.find((lbl) => lbl === selectedEvent.label) : labelsClasses[0],
-  );
+    return resultYear !== null ? JSON.parse(resultYear) : ''
+  })
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const calendatEvent = {
-      id: selectedEvent ? selectedEvent.id : Date.now(),
-      title,
-      description,
-      label: selectedLabel,
-      day: daySelected.valueOf(),
-    };
-    if (selectedEvent) {
-      dispatch({ type: 'update', payload: calendatEvent });
-    } else {
-      dispatch({ type: 'push', payload: calendatEvent });
-    }
-    setShowEventModal(false);
-  };
+
+    localStorage.setItem('result', JSON.stringify(result))
+    onClose()
+  }
+
   return (
-    <div className="h-screen  w-full fixed left-0 top-0 flex justify-center items-center">
-      <form className="bg-white rounded-lg shadow-2xl w-1/4">
-        <header className="bg-gray-100 px-4 py-2 flex justify-between items-center">
-          <span>
+    <div className="fixed w-1/2 bg-white left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 shadow-2xl">
+      <form>
+        <header className="w-full bg-gray-100 flex items-center justify-between p-4">
+          <span className='flex gap-4'>
             <Image src={'images/menu.svg'} width={15} height={15} alt="" />
+            <span className='text-xl'>Итоги года</span>
           </span>
-          <div className="flex">
-            {selectedEvent && (
-              <span
-                onClick={() => {
-                  dispatch({
-                    type: 'delete',
-                    payload: selectedEvent,
-                  });
-                  setShowEventModal(false);
-                }}
-                className="cursor-pointer">
-                <Image src={'images/trash.svg'} width={20} height={20} alt="" />
-              </span>
-            )}
-            <button onClick={() => setShowEventModal(false)} className="ml-2">
-              <span>
-                <Image src={'images/cross.svg'} width={25} height={25} alt="" />
-              </span>
-            </button>
-          </div>
+          <button onClick={onClose} className="ml-2">
+            <span>
+              <Image src={'images/cross.svg'} width={25} height={25} alt="" />
+            </span>
+          </button>            
         </header>
+        <div className='px-4 h-1/2'>
+          <textarea
+            type="text"
+            name="result"
+            placeholder="Add result"
+            value={result}
+            rows={20}
+            required
+            className="text-gray-600 w-full outline-none py-4"
+            onChange={(e) => setResult(e.target.value)}
+          />
+        </div>
+      </form>
+      <footer className="flex justify-end w-auto border-t p-3 mt-5">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded text-white">
+            Save
+          </button>
+        </footer>
+      {/* 
+
+        <form className='w-1/4 aspect-square  bg-white shadow-2xl'>
+
+        </form> */}
+      {/* <form className="bg-white rounded-lg shadow-2xl w-1/4">
+      
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque iusto, itaque in repellat eos perspiciatis temporibus explicabo tenetur corrupti. Incidunt nihil exercitationem, enim odit voluptatum deserunt impedit accusantium obcaecati dolor. */}
+      
+        {/* 
         <div className="p-3">
           <div className="grid grid-cols-1/5 items-end gap-y-7">
             <div></div>
@@ -84,7 +86,7 @@ export const EventModal = () => {
               name="description"
               placeholder="Add description"
               value={description}
-              rows={6}
+              rows={5}
               required
               className="pt-3 border-0 text-gray-600 w-full border-b-2 border-gray-200 focus:outline-none focus:ring-0 focus:border-blue-500 z-10"
               onChange={(e) => setDescription(e.target.value)}
@@ -93,10 +95,11 @@ export const EventModal = () => {
               <Image src={'images/bookmark.svg'} width={20} height={20} alt="" />
             </span>
             <div className="inline-flex gap-x-2 pt-10">
-              {labelsClasses.map((color, i) => (
+              {labelsClasses.map(({tooltip, color}, i) => (
                 <span
                   key={i}
-                  className="relative w-6 h-6 rounded-full flex items-center justify-center cursor-pointer"
+                  data-tooltip={tooltip}
+                  className="relative w-6 h-6 rounded-full flex items-center justify-center cursor-pointer color-tooltip"
                   style={{ background: color }}
                   onClick={() => setSelectedLabel(color)}>
                   {selectedLabel === color && (
@@ -116,8 +119,8 @@ export const EventModal = () => {
             className="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded text-white">
             Save
           </button>
-        </footer>
-      </form>
+        </footer> */}
+     
     </div>
   );
 };
