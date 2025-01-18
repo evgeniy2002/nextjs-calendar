@@ -17,7 +17,7 @@ export const WidgetsBar = () => {
 
   const { savedEvents } = useContext(GlobalContext);
   const [weight, setWeight] = useState('');
-  const [prevWeight, setPrevWeight] = useState(0);
+  const [pay, setPay] = useState('');
   const [inProgressTitle, setInProgressTitle] = useState('');
   const [statusTasks, setStatusTasks] = useState({});
   const [showResultYear, setShowResultYear] = useState(false);
@@ -42,8 +42,8 @@ export const WidgetsBar = () => {
 
     if (widget) {
       setWeight(widget.weight);
+      setPay(widget.pay);
       setInProgressTitle(widget.inProgressTitle);
-      setPrevWeight(widget.diffWeight)
     }
   }, [isEdit]);
 
@@ -54,12 +54,12 @@ export const WidgetsBar = () => {
   }
 
   const handleChangeWidget = () => {
-    const widget = JSON.parse(localStorage.getItem('widget'))
    
     const widgetEvent = {
       weight,
       inProgressTitle,
-      diffWeight: (weight - widget.weight).toFixed(1)
+      diffWeight: weight,
+      pay,
     }
 
     localStorage.setItem('widget', JSON.stringify(widgetEvent));
@@ -69,9 +69,29 @@ export const WidgetsBar = () => {
   return (
     <div className='mt-10 flex flex-col gap-10'>
       <div className='flex flex-col gap-5'>
+        <div className='flex gap-2 items-center'>
+          <span>
+            <Image src={'/images/pay.svg'} width={24} height={24} alt="" />
+          </span>
+          <span className='flex-1 text-lg font-medium'>Сумма:</span>
+
+          <input
+            ref={inputRef}
+            type="text"
+            name="title"
+            value={pay}
+            disabled={!isEdit}
+            required
+            className={classNames("w-1/2  h-full text-right bg-gray-100 font-medium duration-150 outline-none", {
+              '!bg-white duration-150': isEdit
+            })}
+            onChange={(e) => setPay(e.target.value)}
+          />
+          <span className='relative mr-2'>₽</span>
+        </div>
         <div className='flex items-center flex-wrap' onClick={handleClickInput}>
           <Image src={'/images/weight.svg'} width={22} height={22} alt="" />
-          <span className='flex-1 text-xl font-medium select-none ml-2'>Вес: </span>
+          <span className='flex-1 text-lg font-medium select-none ml-2'>Вес: </span>
           <input
             ref={inputRef}
             type="text"
@@ -85,24 +105,13 @@ export const WidgetsBar = () => {
             onChange={(e) => setWeight(e.target.value)}
           />
           <span className='relative mr-2'>Кг</span>
-          <span className='flex items-center'>
-            <span className='font-bold'>{prevWeight}</span>
 
-            <span className='relative top-1'>
-            {
-              prevWeight > 0 
-                ? <Image src={'/images/arrow-up.svg'} width={22} height={22} className='animate-bounce' alt=''/>
-                : <Image src={'/images/arrow-down.svg'} width={22} height={22} className='animate-bounce' alt=''/>
-            }
-            </span>
-            
-          </span>
         </div>
         <div className='flex gap-2'>  
           <Image src={'/images/study.svg'} width={22} height={22} alt="" className='self-start'/>
         
           <div className='flex flex-col gap-1'>
-            <h3 className='text-xl font-medium select-none'>В изучение:</h3>
+            <h3 className='text-lg font-medium select-none'>В изучение:</h3>
             
             <textarea
                 type="text"
@@ -146,7 +155,7 @@ export const WidgetsBar = () => {
       <div className=''>
         <div className='flex items-center gap-2 pb-3'>
           <Image src={'/images/statistics.svg'} width={22} height={22} alt="" />
-          <h3 className='text-xl font-medium'>Статистика:</h3>
+          <h3 className='text-lg font-medium'>Статистика:</h3>
         </div>
 
         <div className='grid'>
@@ -175,7 +184,7 @@ export const WidgetsBar = () => {
 
       <div className='widget-hover flex items-center gap-2 group' onClick={() => setShowResultYear(true)}>
         <Image src={'images/calendar.svg'} width={20} height={20} alt="" />
-        <p className='relative w-full text-xl font-medium'>Итоги года <span className='absolute right-0'>&#8594;</span></p>
+        <p className='relative w-full text-lg font-medium'>Итоги года <span className='absolute right-0'>&#8594;</span></p>
       </div>
     
 

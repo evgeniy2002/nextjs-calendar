@@ -1,16 +1,15 @@
 import GlobalContext from '@/context/GlobalContext';
 import Image from 'next/image';
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { Toggle } from './Toggle';
 
 const labelsClasses = ['#9BA1B6', '#F7455B', '#efaa1c', '#2b68ead4'];
 
 export const EventModal = () => {
-  const { setShowEventModal, daySelected, dispatch, selectedEvent } =
-    React.useContext(GlobalContext);
-  const [title, setTitle] = React.useState(selectedEvent ? selectedEvent.title : '');
-  const [description, setDescription] = React.useState(
-    selectedEvent ? selectedEvent.description : '',
-  );
+  const { setShowEventModal, daySelected, dispatch, selectedEvent } = useContext(GlobalContext);
+  const [title, setTitle] = useState(selectedEvent ? selectedEvent.title : '');
+  const [didPay, setDidPay] = useState(selectedEvent ? selectedEvent.didPay : false);
+  const [description, setDescription] = useState(selectedEvent ? selectedEvent.description : '');
 
   const [selectedLabel, setSelectedLabel] = React.useState(
     selectedEvent ? labelsClasses.find((lbl) => lbl === selectedEvent.label) : labelsClasses[0],
@@ -24,6 +23,7 @@ export const EventModal = () => {
       description,
       label: selectedLabel,
       day: daySelected.valueOf(),
+      didPay,
     };
     if (selectedEvent) {
       dispatch({ type: 'update', payload: calendatEvent });
@@ -89,6 +89,16 @@ export const EventModal = () => {
               className="pt-3 border-0 text-gray-600 w-full border-b-2 border-gray-200 focus:outline-none focus:ring-0 focus:border-blue-500 z-10"
               onChange={(e) => setDescription(e.target.value)}
             />
+            {
+              selectedEvent && selectedEvent.label !== '#2b68ead4' && (
+                <>
+                  <span>
+                    <Image src={'images/pay.svg'} width={24} height={24} alt="" />
+                  </span>
+                  <Toggle isOn={didPay} handleToggle={() => setDidPay(!didPay)}/>
+                </>
+              )
+            }
             <span>
               <Image src={'images/bookmark.svg'} width={20} height={20} alt="" />
             </span>
@@ -107,6 +117,7 @@ export const EventModal = () => {
                 </span>
               ))}
             </div>
+           
           </div>
         </div>
         <footer className="flex justify-end w-auto border-t p-3 mt-5">
